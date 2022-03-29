@@ -1,73 +1,177 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class LaungageSelect extends StatefulWidget {
-  const LaungageSelect({
+class LanguageView extends StatefulWidget {
+  const LanguageView({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LaungageSelect> createState() => _LaungageSelectState();
+  State<LanguageView> createState() => _LanguageViewState();
 }
 
-class _LaungageSelectState extends State<LaungageSelect> {
-  @override
-  String url = "https://jsonplaceholder.typicode.com/todos";
-  late final List data;
+class _LanguageViewState extends State<LanguageView> {
+  late List language;
+  String _mySelection = '';
+  final url = Uri.parse(
+    'http://koyaboliapi.pravinbhaiswar.com/api/language/loadLanguage',
+  );
+  //edited line
+  Future<String> getSWData() async {
+    var res = await http.get(url, headers: {"Accept": "application/json"});
+    var resBody = json.decode(res.body);
 
-  Future<String> getSwdata() async {
-    var res = await http.get(Uri.parse(Uri.encodeFull(url)),
-        headers: {"Accept": "application/json"});
-    var resBody = jsonDecode(res.body);
     setState(() {
-      data = resBody;
-      print(data.map((e) => e['title']).toList());
+      language = resBody.data['data'];
     });
-    return "sucess";
+
+    print(resBody);
+
+    return "Sucess";
   }
 
   @override
   void initState() {
     super.initState();
-    getSwdata();
+    this.getSWData();
+    //  language = ApiLanguage.getLanguageList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height / 11,
-        decoration: BoxDecoration(
-            color: Colors.brown.shade700,
-            borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "English",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+    return Container(
+      alignment: Alignment.center,
+      width: 500,
+      height: 220,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        // color: Colors.indigo.shade400,
+
+        gradient: LinearGradient(colors: [
+          Colors.indigo.shade400,
+          Colors.indigo.shade400,
+        ]),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            "Koyaboli",
+            style: TextStyle(
+                fontStyle: FontStyle.normal,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+                color: Colors.white),
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 35,
+                width: 135,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: Colors.indigo.shade400,
+                ),
+                child: Center(child: Text('data')),
+                // DropdownButton(
+                //     value: _s,
+                //     onChanged: (value) => _s,
+                //     alignment: Alignment.bottomLeft,
+                //     dropdownColor: Colors.blueAccent,
+                //     items: const [
+                //       DropdownMenuItem(
+                //         child: Text("English",
+                //             style: TextStyle(
+                //                 fontWeight: FontWeight.bold,
+                //                 color: Colors.white)),
+                //         value: 0,
+                //       ),
+                //       DropdownMenuItem(
+                //         child: Text("Tamil"),
+                //         value: 2,
+                //       )
+                //     ]),
+              ),
+              Container(
+                height: 40,
+                width: 35,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  // color: Colors.white,
+                ),
+                child: const Center(
+                    child: Icon(CupertinoIcons.arrow_left_right_circle,
+                        color: Colors.white)),
+              ),
+              Container(
+                height: 35,
+                width: 135,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: Colors.indigo.shade400,
+                ),
+                child: Center(
+                    child: DropdownButton(
+                        // value: widget._s,
+                        // onChanged: (value) => ,
+                        alignment: Alignment.bottomLeft,
+                        dropdownColor: Colors.blueAccent,
+                        items: const [
+                      DropdownMenuItem(
+                        child: Text("Hindi",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        value: 0,
+                      ),
+                      DropdownMenuItem(
+                        child: Text("Tamil"),
+                        value: 2,
+                      )
+                    ])),
+              ),
+            ],
+          ),
+
+          //TextBox Container Start
+          Container(
+            height: 50,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width / 1.2,
+              child: TextField(
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                      suffixIcon: InkWell(
+                          highlightColor: Colors.red,
+                          child: const Icon(CupertinoIcons.search),
+                          onTap: () {
+                            ///
+                          }),
+                      hintText: "Search.... ",
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide.none)),
+                  onChanged: (value) {}),
             ),
-            Icon(
-              Icons.double_arrow_rounded,
-              color: Colors.white,
-            ),
-            Text(
-              "Hindi",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+@override
+Widget build(BuildContext context) {
+  // TODO: implement build
+  throw UnimplementedError();
 }

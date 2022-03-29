@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final events = eventsFromJson(jsonString);
+//     final clsPlace = clsPlaceFromJson(jsonString);
 
 import 'dart:convert';
 
-ClsEvents eventsFromJson(String str) => ClsEvents.fromJson(json.decode(str));
+ClsPlace clsPlaceFromJson(String str) => ClsPlace.fromJson(json.decode(str));
 
-String eventsToJson(ClsEvents data) => json.encode(data.toJson());
+String clsPlaceToJson(ClsPlace data) => json.encode(data.toJson());
 
-class ClsEvents {
-  ClsEvents({
+class ClsPlace {
+  ClsPlace({
     this.message,
     this.status,
     this.data,
@@ -19,7 +19,7 @@ class ClsEvents {
   int? status;
   List<Datum>? data;
 
-  factory ClsEvents.fromJson(Map<String, dynamic> json) => ClsEvents(
+  factory ClsPlace.fromJson(Map<String, dynamic> json) => ClsPlace(
         message: json["message"],
         status: json["status"],
         data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
@@ -34,32 +34,28 @@ class ClsEvents {
 
 class Datum {
   Datum({
-    this.eventId,
-    this.title,
-    this.date,
-    this.eventImage,
+    this.placeId,
+    this.placeName,
+    this.placeImage,
     this.description,
   });
 
-  int? eventId;
-  String? title;
-  String? date;
-  dynamic eventImage;
+  int? placeId;
+  String? placeName;
+  dynamic placeImage;
   String? description;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        eventId: json["eventId"],
-        title: json["title"],
-        date: json["date"],
-        eventImage: json["eventImage"],
+        placeId: json["placeId"],
+        placeName: json["placeName"],
+        placeImage: json["placeImage"],
         description: json["description"],
       );
 
   Map<String, dynamic> toJson() => {
-        "eventId": eventId,
-        "title": title,
-        "date": date,
-        "eventImage": eventImage,
+        "placeId": placeId,
+        "placeName": placeName,
+        "placeImage": placeImage,
         "description": description,
       };
 }

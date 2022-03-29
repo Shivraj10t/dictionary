@@ -1,7 +1,8 @@
 import 'package:dictionary/widget/dictionary/dictionary.dart';
 import 'package:dictionary/widget/events/events.dart';
-import 'package:dictionary/widget/login/login.dart';
-import 'package:dictionary/widget/signup/signup.dart';
+
+import 'package:dictionary/widget/places/place.dart';
+import 'package:dictionary/widget/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -18,12 +19,9 @@ class _BaseScreenState extends State<BaseScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const Dictionary(),
     const Events(),
-    LoginPage(),
-    // Text(
-    //   'Index 2: School',
-    //   style: optionStyle,
-    // ),
-    const SignupPage()
+    const Place(),
+    const Profile()
+    // const SignupPage()
     // Text(
     //   'Index 4: School',
     //   style: optionStyle,

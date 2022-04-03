@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:dictionary/models/clslanguage.dart';
+import 'package:dictionary/models/clsmeaning.dart';
+import 'package:dictionary/services/meaningservices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,30 +18,36 @@ class LanguageView extends StatefulWidget {
 }
 
 class _LanguageViewState extends State<LanguageView> {
-  late List language;
-  String _mySelection = '';
-  final url = Uri.parse(
-    'http://koyaboliapi.pravinbhaiswar.com/api/language/loadLanguage',
-  );
-  //edited line
-  Future<String> getSWData() async {
-    var res = await http.get(url, headers: {"Accept": "application/json"});
-    var resBody = json.decode(res.body);
+  String? _mySelection;
+  Future<ClsMeaning>? meaning;
+  List data = []; //edited line
+  TextEditingController txtSearch = TextEditingController();
+  Future<ClsLanguage> getlanguageList() async {
+    //19/09/2021
+    final url = Uri.parse(
+      'http://koyaboliapi.pravinbhaiswar.com/api/language/loadLanguage',
+    );
 
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return ClsLanguage.fromJson(json.decode(response.body));
+    } else {
+      return throw Exception("Api error");
+    }
+  }
+
+  searchWorld(e) {
     setState(() {
-      language = resBody.data['data'];
+      meaning = ApiMeaning.getMeanning(word: e, idFirst: 1, idSecond: 2);
+      inspect('');
     });
-
-    print(resBody);
-
-    return "Sucess";
   }
 
   @override
   void initState() {
     super.initState();
-    this.getSWData();
-    //  language = ApiLanguage.getLanguageList();
+    getlanguageList();
   }
 
   @override
@@ -78,25 +88,20 @@ class _LanguageViewState extends State<LanguageView> {
                   borderRadius: BorderRadius.circular(2),
                   color: Colors.indigo.shade400,
                 ),
-                child: Center(child: Text('data')),
-                // DropdownButton(
-                //     value: _s,
-                //     onChanged: (value) => _s,
-                //     alignment: Alignment.bottomLeft,
-                //     dropdownColor: Colors.blueAccent,
-                //     items: const [
-                //       DropdownMenuItem(
-                //         child: Text("English",
-                //             style: TextStyle(
-                //                 fontWeight: FontWeight.bold,
-                //                 color: Colors.white)),
-                //         value: 0,
-                //       ),
-                //       DropdownMenuItem(
-                //         child: Text("Tamil"),
-                //         value: 2,
-                //       )
-                //     ]),
+                child: DropdownButton(
+                  items: data.map((item) {
+                    return DropdownMenuItem(
+                      child: Text(item['item_name']),
+                      value: item['id'].toString(),
+                    );
+                  }).toList(),
+                  onChanged: (a) {
+                    setState(() {
+                      _mySelection = a as String;
+                    });
+                  },
+                  value: _mySelection,
+                ),
               ),
               Container(
                 height: 40,
@@ -150,28 +155,40 @@ class _LanguageViewState extends State<LanguageView> {
               ),
               width: MediaQuery.of(context).size.width / 1.2,
               child: TextField(
+                  controller: txtSearch,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                       suffixIcon: InkWell(
                           highlightColor: Colors.red,
                           child: const Icon(CupertinoIcons.search),
                           onTap: () {
+                            inspect('a');
+
                             ///
+                            FutureBuilder<ClsMeaning>(
+                                future: meaning,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    inspect(snapshot.data!.data!.word);
+                                    return Text('${snapshot.data!.data!.word}');
+                                  } else if (snapshot.hasError) {
+                                    return Text('${snapshot.error}');
+                                  }
+
+                                  // By default, show a loading spinner.
+                                  return const CircularProgressIndicator();
+                                });
                           }),
                       hintText: "Search.... ",
                       border: const OutlineInputBorder(
                           borderSide: BorderSide.none)),
-                  onChanged: (value) {}),
+                  onChanged: (value) {
+                    searchWorld(value);
+                  }),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-@override
-Widget build(BuildContext context) {
-  // TODO: implement build
-  throw UnimplementedError();
 }

@@ -1,5 +1,6 @@
 import 'package:dictionary/widget/dictionary/dictionary.dart';
 import 'package:dictionary/widget/events/events.dart';
+import 'package:dictionary/widget/login/login.dart';
 
 import 'package:dictionary/widget/places/place.dart';
 import 'package:dictionary/widget/profile/profile.dart';
@@ -20,6 +21,7 @@ class _BaseScreenState extends State<BaseScreen> {
     const Dictionary(),
     const Events(),
     const Place(),
+    //const LoginPage(),
     const Profile()
     // const SignupPage()
     // Text(

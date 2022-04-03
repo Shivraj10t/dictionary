@@ -1,7 +1,6 @@
-import 'package:dictionary/widget/base.dart';
+import 'package:dictionary/widget/splash/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
-        home: const BaseScreen());
+        home: const SplashSrc());
   }
 }
 

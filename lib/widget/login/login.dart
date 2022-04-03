@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:dictionary/services/register.dart';
+import 'package:dictionary/widget/base.dart';
+import 'package:dictionary/widget/signup/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,22 +17,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.black,
-            )),
-      ),
       body: LoginBody(),
     );
   }
@@ -52,18 +42,30 @@ class _LoginBodyState extends State<LoginBody> {
       'Mobile': txtmobile.text,
       'Password': textPass.text,
     };
-    // http://koyaboliapi.pravinbhaiswar.com/
-    // api/member/memberRegistration
+
     var res = await CallApi().postData(data, "api/member/memberLogin");
     var body = json.decode(res.body);
-    final snackBar = SnackBar(
-      content: Text('$body'),
-    );
+    var i = body['status'];
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+
+    var snackBar;
+    if (i == 1) {
+      sharedPreferences.setString(
+          'memberId', body['data']['memberId'].toString());
+      print(sharedPreferences.getString('memberId'));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => BaseScreen()));
+    } else {
+      snackBar = const SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('Invalid User'),
+      );
+    }
 
 // Find the ScaffoldMessenger in the widget tree
 // and use it to show a SnackBar.
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    print(body);
   }
 
   @override
@@ -152,14 +154,23 @@ class _LoginBodyState extends State<LoginBody> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("Don't have an account?"),
-                  SizedBox(
+                children: [
+                  const Text("Don't have an account?"),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    "Sign Up",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SignupPage()));
+                    },
+                    child: const Text(
+                      "Sign Up",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                    ),
                   ),
                 ],
               )

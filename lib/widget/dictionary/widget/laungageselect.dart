@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dictionary/models/clslanguage.dart';
 import 'package:dictionary/models/clsmeaning.dart';
 import 'package:dictionary/services/meaningservices.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,12 +17,12 @@ class LanguageView extends StatefulWidget {
 }
 
 class _LanguageViewState extends State<LanguageView> {
-  String? _mySelection;
+  String? _mySelection1, _mySelection2;
   Future<ClsMeaning>? meaning;
   List data = []; //edited line
+  List languagedata = []; //edited line
   TextEditingController txtSearch = TextEditingController();
-  Future<ClsLanguage> getlanguageList() async {
-    //19/09/2021
+  getlanguageList() async {
     final url = Uri.parse(
       'http://koyaboliapi.pravinbhaiswar.com/api/language/loadLanguage',
     );
@@ -31,7 +30,17 @@ class _LanguageViewState extends State<LanguageView> {
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return ClsLanguage.fromJson(json.decode(response.body));
+      var l = json.decode(response.body);
+
+      languagedata = l['data'];
+      inspect(languagedata.length);
+      for (var i = 0; i < languagedata.length; i++) {
+        data.add(languagedata[i]['languageName']);
+      }
+      _mySelection1 = data[0].toString();
+      _mySelection2 = data[0].toString();
+
+      setState(() {});
     } else {
       return throw Exception("Api error");
     }
@@ -40,7 +49,6 @@ class _LanguageViewState extends State<LanguageView> {
   searchWorld(e) {
     setState(() {
       meaning = ApiMeaning.getMeanning(word: e, idFirst: 1, idSecond: 2);
-      inspect('');
     });
   }
 
@@ -88,19 +96,28 @@ class _LanguageViewState extends State<LanguageView> {
                   borderRadius: BorderRadius.circular(2),
                   color: Colors.indigo.shade400,
                 ),
-                child: DropdownButton(
+                child: DropdownButton<dynamic>(
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18),
+                  dropdownColor: Colors.white,
+                  focusColor: Colors.red,
                   items: data.map((item) {
                     return DropdownMenuItem(
-                      child: Text(item['item_name']),
-                      value: item['id'].toString(),
+                      child: Text(
+                        item,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      value: item,
                     );
                   }).toList(),
                   onChanged: (a) {
                     setState(() {
-                      _mySelection = a as String;
+                      _mySelection1 = a;
                     });
                   },
-                  value: _mySelection,
+                  value: _mySelection1,
                 ),
               ),
               Container(
@@ -121,25 +138,30 @@ class _LanguageViewState extends State<LanguageView> {
                   borderRadius: BorderRadius.circular(2),
                   color: Colors.indigo.shade400,
                 ),
-                child: Center(
-                    child: DropdownButton(
-                        // value: widget._s,
-                        // onChanged: (value) => ,
-                        alignment: Alignment.bottomLeft,
-                        dropdownColor: Colors.blueAccent,
-                        items: const [
-                      DropdownMenuItem(
-                        child: Text("Hindi",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        value: 0,
+                child: DropdownButton<dynamic>(
+                  //  underline: SizedBox(),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18),
+                  dropdownColor: Colors.white,
+                  focusColor: Colors.red,
+                  items: data.map((item) {
+                    return DropdownMenuItem(
+                      child: Text(
+                        item,
+                        style: TextStyle(color: Colors.black),
                       ),
-                      DropdownMenuItem(
-                        child: Text("Tamil"),
-                        value: 2,
-                      )
-                    ])),
+                      value: item,
+                    );
+                  }).toList(),
+                  onChanged: (a) {
+                    setState(() {
+                      _mySelection2 = a;
+                    });
+                  },
+                  value: _mySelection2,
+                ),
               ),
             ],
           ),
@@ -158,26 +180,19 @@ class _LanguageViewState extends State<LanguageView> {
                   controller: txtSearch,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          highlightColor: Colors.red,
-                          child: const Icon(CupertinoIcons.search),
+                      suffixIcon: GestureDetector(
+                          child: Container(
+                              height: 100,
+                              decoration: const BoxDecoration(
+                                  color: Colors.indigo,
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(10),
+                                      topRight: Radius.circular(10))),
+                              child: const Icon(CupertinoIcons.search,
+                                  color: Colors.white)),
                           onTap: () {
-                            inspect('a');
-
-                            ///
-                            FutureBuilder<ClsMeaning>(
-                                future: meaning,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    inspect(snapshot.data!.data!.word);
-                                    return Text('${snapshot.data!.data!.word}');
-                                  } else if (snapshot.hasError) {
-                                    return Text('${snapshot.error}');
-                                  }
-
-                                  // By default, show a loading spinner.
-                                  return const CircularProgressIndicator();
-                                });
+                            inspect('1: $_mySelection1 || 2: $_mySelection2');
+                            inspect(txtSearch.text);
                           }),
                       hintText: "Search.... ",
                       border: const OutlineInputBorder(

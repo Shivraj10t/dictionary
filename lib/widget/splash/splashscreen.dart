@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
 
 import 'dart:io';
@@ -17,19 +19,18 @@ class SplashSrc extends StatefulWidget {
 }
 
 class _SplashSrcState extends State<SplashSrc> {
-  @override
-  var finalMemberId;
+  var finalmemberid;
   @override
   void initState() {
     super.initState();
 
     getValidData().whenComplete(() async {
       Future.delayed(const Duration(seconds: 3), () {
-        print(" Id : $finalMemberId");
+        // print(" Id : $finalmemberid");
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => finalMemberId == null
+                builder: (context) => finalmemberid == null
                     ? const LoginPage()
                     : const BaseScreen()));
       });
@@ -42,7 +43,7 @@ class _SplashSrcState extends State<SplashSrc> {
     var objmemberId = sharedPreferences.getString('memberId');
 
     setState(() {
-      finalMemberId = objmemberId!;
+      finalmemberid = objmemberId!;
     });
   }
 

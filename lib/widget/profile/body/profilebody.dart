@@ -34,7 +34,7 @@ class _ProfileBodyState extends State<ProfileBody> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => const LoginPage(),
         ));
     setState(() {
       // objmemberId = sharedPreferences.getString('memberId');

@@ -1,3 +1,4 @@
+import 'package:dictionary/widget/dictionary/widget/addsbody.dart';
 import 'package:dictionary/widget/dictionary/widget/laungageselect.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,8 @@ class DBody extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            Placeholder()
+            AddsHome()
+            // Placeholder()
           ],
         ),
       ),

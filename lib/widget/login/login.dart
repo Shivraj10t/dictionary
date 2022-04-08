@@ -53,9 +53,9 @@ class _LoginBodyState extends State<LoginBody> {
     if (i == 1) {
       sharedPreferences.setString(
           'memberId', body['data']['memberId'].toString());
-      print(sharedPreferences.getString('memberId'));
+      //  print(sharedPreferences.getString('memberId'));
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BaseScreen()));
+          context, MaterialPageRoute(builder: (context) => const BaseScreen()));
     } else {
       snackBar = const SnackBar(
         behavior: SnackBarBehavior.floating,

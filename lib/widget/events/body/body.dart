@@ -133,7 +133,7 @@ class _BodyState extends State<Body> {
                               },
                               child: Text(
                                 fromDate,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
@@ -165,7 +165,7 @@ class _BodyState extends State<Body> {
                               },
                               child: Text(
                                 toDate,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
@@ -250,7 +250,10 @@ class _BodyState extends State<Body> {
                                           SizedBox(
                                             width: 170,
                                             child: Text(
-                                              '${snapshot.data!.data![index].description.toString().substring(1)}',
+                                              snapshot.data!.data![index]
+                                                  .description
+                                                  .toString()
+                                                  .substring(1),
                                               textAlign: TextAlign.justify,
                                             ),
                                           ),

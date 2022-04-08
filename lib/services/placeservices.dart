@@ -29,7 +29,7 @@ class ApiPlace {
     );
 
     var response = await http.get(url);
-    print(response);
+
     if (response.statusCode == 200) {
       return ClsPlace.fromJson(json.decode(response.body));
     } else {

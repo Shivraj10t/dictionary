@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dictionary/models/clsmeaning.dart';
 import 'package:dictionary/services/meaningservices.dart';
+import 'package:dictionary/widget/dictionary/dictionarydetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -150,7 +151,7 @@ class _LanguageViewState extends State<LanguageView> {
                     return DropdownMenuItem(
                       child: Text(
                         item,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                       value: item,
                     );
@@ -177,29 +178,39 @@ class _LanguageViewState extends State<LanguageView> {
               ),
               width: MediaQuery.of(context).size.width / 1.2,
               child: TextField(
-                  controller: txtSearch,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                      suffixIcon: GestureDetector(
-                          child: Container(
-                              height: 100,
-                              decoration: const BoxDecoration(
-                                  color: Colors.indigo,
-                                  borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(10),
-                                      topRight: Radius.circular(10))),
-                              child: const Icon(CupertinoIcons.search,
-                                  color: Colors.white)),
-                          onTap: () {
-                            inspect('1: $_mySelection1 || 2: $_mySelection2');
-                            inspect(txtSearch.text);
-                          }),
-                      hintText: "Search.... ",
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide.none)),
-                  onChanged: (value) {
-                    searchWorld(value);
-                  }),
+                controller: txtSearch,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                    suffixIcon: GestureDetector(
+                        child: Container(
+                            height: 100,
+                            decoration: const BoxDecoration(
+                                color: Colors.indigo,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(10),
+                                    topRight: Radius.circular(10))),
+                            child: const Icon(CupertinoIcons.search,
+                                color: Colors.white)),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => DictionaryDetails(
+                                        firstlaunguage: _mySelection1,
+                                        secondlaunguage: _mySelection2,
+                                        word: txtSearch.text,
+                                      )));
+                          inspect('1: $_mySelection1 || 2: $_mySelection2');
+                          inspect(txtSearch.text);
+                        }),
+                    hintText: "Search.... ",
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none)),
+                // onChanged: (value) {
+
+                //   searchWorld(value);
+                // }
+              ),
             ),
           ),
         ],

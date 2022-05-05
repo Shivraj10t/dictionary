@@ -51,9 +51,14 @@ class _LoginBodyState extends State<LoginBody> {
 
     var snackBar;
     if (i == 1) {
+      Map<String, dynamic> user = body['data'];
+      sharedPreferences.setString('MemberDetails', jsonEncode(user));
       sharedPreferences.setString(
           'memberId', body['data']['memberId'].toString());
-      //  print(sharedPreferences.getString('memberId'));
+      snackBar = const SnackBar(
+        behavior: SnackBarBehavior.floating,
+        content: Text('Login sucessfull'),
+      );
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const BaseScreen()));
     } else {

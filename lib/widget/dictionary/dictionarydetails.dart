@@ -25,9 +25,6 @@ class _DictionaryDetailsState extends State<DictionaryDetails> {
 
     meaning =
         ApiMeaning.getMeanning(idFirst: firLan, idSecond: seclan, word: world);
-
-    // inspect(
-    //     'first laingage : ${widget.firstlaunguage}   || Second laungage : ${widget.secondlaunguage}  ||  world : ${widget.word}');
   }
 
   @override

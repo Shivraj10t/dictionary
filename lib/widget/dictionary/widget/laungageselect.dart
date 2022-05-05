@@ -34,7 +34,7 @@ class _LanguageViewState extends State<LanguageView> {
       var l = json.decode(response.body);
 
       languagedata = l['data'];
-      inspect(languagedata.length);
+
       for (var i = 0; i < languagedata.length; i++) {
         data.add(languagedata[i]['languageName']);
       }

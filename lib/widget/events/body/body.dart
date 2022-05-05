@@ -95,7 +95,7 @@ class _BodyState extends State<Body> {
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(borderSide: BorderSide.none),
-                        label: Text("Search Events"),
+                        hintText: "Search Events",
                       ),
                     ),
                   ),
@@ -104,17 +104,6 @@ class _BodyState extends State<Body> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: TextButton.icon(
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           _selectDate(context);
-                        //         });
-                        //       },
-                        //       icon: const Icon(Icons.date_range),
-                        //       label: Text("$_fromDate".split(' ')[0])),
-                        // ),
                         Column(
                           children: [
                             const Text(
@@ -158,10 +147,6 @@ class _BodyState extends State<Body> {
                                         '${_toDate.day}/${_toDate.month}/${_toDate.year}';
                                   });
                                 });
-                                // setState(() {
-                                //   toDate =
-                                //       '${_toDate.day}/${_toDate.month}/${_toDate.year}';
-                                // });
                               },
                               child: Text(
                                 toDate,
@@ -229,35 +214,38 @@ class _BodyState extends State<Body> {
                                       const SizedBox(
                                         width: 10,
                                       ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${snapshot.data!.data![index].title}',
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 17),
-                                          ),
-                                          Text(
-                                            '${snapshot.data!.data![index].date}',
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13),
-                                          ),
-                                          SizedBox(
-                                            width: 170,
-                                            child: Text(
-                                              snapshot.data!.data![index]
-                                                  .description
-                                                  .toString()
-                                                  .substring(1),
-                                              textAlign: TextAlign.justify,
+                                      Container(
+                                        width: 150,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${snapshot.data!.data![index].title}',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17),
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              '${snapshot.data!.data![index].date}',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                            SizedBox(
+                                              width: 170,
+                                              child: Text(
+                                                snapshot.data!.data![index]
+                                                    .description
+                                                    .toString()
+                                                    .substring(1),
+                                                textAlign: TextAlign.justify,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

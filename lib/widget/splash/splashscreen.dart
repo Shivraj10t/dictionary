@@ -43,7 +43,7 @@ class _SplashSrcState extends State<SplashSrc> {
     var objmemberId = sharedPreferences.getString('memberId');
 
     setState(() {
-      finalmemberid = objmemberId!;
+      finalmemberid = objmemberId;
     });
   }
 

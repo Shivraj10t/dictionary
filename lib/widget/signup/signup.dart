@@ -39,11 +39,11 @@ class _RegisterBodyState extends State<RegisterBody> {
   TextEditingController txtconpassword = TextEditingController();
   register() async {
     var data = {
-      'Email': txtemail.text,
-      'Mobile': txtmobile.text,
-      'Password': txtpassword.text,
-      'FullName': txtfullname.text,
-      'DeviceId': 1
+      'email': txtemail.text,
+      'mobile': txtmobile.text,
+      'password': txtpassword.text,
+      'fullName': txtfullname.text,
+      'deviceId': 1
     };
 
     var res = await CallApi().postData(data, "api/member/memberRegistration");
@@ -56,9 +56,13 @@ class _RegisterBodyState extends State<RegisterBody> {
 
     var snackBar;
     if (i == 1) {
-      // print(body['data']['memberId']);
       String id = body['data']['memberId'].toString();
       sharedPreferences.setString('memberId', id);
+      //Get member Details
+      // Map<String, dynamic> user = body['data'];
+      sharedPreferences.setString('MemberDetails', jsonEncode(data));
+      //***************
+      // */
       snackBar = SnackBar(
         behavior: SnackBarBehavior.floating,
         content:
@@ -78,123 +82,125 @@ class _RegisterBodyState extends State<RegisterBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          color: Colors.grey.shade100,
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
-          child: Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Sign up",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Create an Account,Its free",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            //  color: Colors.grey.shade100,
+            //  height: MediaQuery.of(context).size.height * 1.5,
+            width: double.infinity,
+            child: Column(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    makeInput(
-                        label: "Email",
-                        t_controller: txtemail,
-                        keyboardType: TextInputType.emailAddress),
-                    makeInput(
-                        label: "Mobile",
-                        t_controller: txtmobile,
-                        keyboardType: TextInputType.phone),
-                    makeInput(label: "Full Name", t_controller: txtfullname),
-                    makeInput(
-                      label: "Password",
-                      obsureText: true,
-                      t_controller: txtpassword,
+                    const SizedBox(
+                      height: 20,
                     ),
-                    makeInput(
-                        label: "Confirm Pasword",
-                        obsureText: true,
-                        t_controller: txtconpassword)
+                    const Text(
+                      "Sign up",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Create an Account,Its free",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    )
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Container(
-                  padding: const EdgeInsets.only(top: 3, left: 3),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    // border: Border(
-                    //     bottom: BorderSide(color: Colors.black),
-                    //     top: BorderSide(color: Colors.black),
-                    //     right: BorderSide(color: Colors.black),
-                    //     left: BorderSide(color: Colors.black)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: [
+                      makeInput(
+                          label: "Email",
+                          t_controller: txtemail,
+                          keyboardType: TextInputType.emailAddress),
+                      makeInput(
+                          label: "Mobile",
+                          t_controller: txtmobile,
+                          keyboardType: TextInputType.phone),
+                      makeInput(label: "Full Name", t_controller: txtfullname),
+                      makeInput(
+                        label: "Password",
+                        obsureText: true,
+                        t_controller: txtpassword,
+                      ),
+                      makeInput(
+                          label: "Confirm Pasword",
+                          obsureText: true,
+                          t_controller: txtconpassword)
+                    ],
                   ),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      register();
-                    },
-                    color: Colors.indigoAccent[400],
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide.none,
-                        borderRadius: BorderRadius.circular(40)),
-                    child: const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 3, left: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      // border: Border(
+                      //     bottom: BorderSide(color: Colors.black),
+                      //     top: BorderSide(color: Colors.black),
+                      //     right: BorderSide(color: Colors.black),
+                      //     left: BorderSide(color: Colors.black)),
+                    ),
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: () {
+                        register();
+                      },
+                      color: Colors.indigoAccent[400],
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide.none,
+                          borderRadius: BorderRadius.circular(40)),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    },
-                    child: const Text(
-                      "Login",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                    ),
-                  )
-                ],
-              )
-            ],
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account? "),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()));
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

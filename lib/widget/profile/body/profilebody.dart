@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dictionary/widget/login/login.dart';
 import 'package:flutter/material.dart';
 
@@ -11,34 +13,51 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  var objmemberId;
-
   @override
   void initState() {
     super.initState();
+
     get();
   }
 
+  var objmemberId;
+  var objmemdetails;
+  dynamic details;
+  TextStyle style = TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+  late String name, email, mobile;
   get() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    setState(() {
+
+    try {
       objmemberId = sharedPreferences.getString('memberId');
-    });
+      objmemdetails = sharedPreferences.getString('MemberDetails');
+      details = jsonDecode(objmemdetails);
+      setState(() {});
+      name = details['fullName'];
+      email = details['email'];
+      mobile = details['mobile'];
+      // setState(() {});
+    } catch (e) {}
+
+     
   }
 
   logout() async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.remove('memberId');
+    sharedPreferences.remove('MemberDetails');
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const LoginPage(),
         ));
-    setState(() {
-      // objmemberId = sharedPreferences.getString('memberId');
-    });
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    get();
   }
 
   @override
@@ -53,23 +72,36 @@ class _ProfileBodyState extends State<ProfileBody> {
               height: 150,
               width: 150,
               decoration: BoxDecoration(
-                color: Colors.amber,
+                //  color: Colors.amber,
                 borderRadius: BorderRadius.circular(200),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Shivraj Tiwaskar $objmemberId',
-                style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
             Card(
-              child: Container(
+              child: SizedBox(
+                //   color: Colors.grey.shade50,
                 height: 450,
+                width: 400,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text("Name :"),
+                        Text(
+                          name,
+                          style: style,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      email,
+                      style: style,
+                    ),
+                    Text(
+                      mobile,
+                      style: style,
+                    ),
+                  ],
+                ),
               ),
             ),
             TextButton(

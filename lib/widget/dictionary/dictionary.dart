@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cashfree_pg/cashfree_pg.dart';
-import 'package:dictionary/models/clssavetransaction.dart';
-import 'package:dictionary/services/savetransaction.dart';
+import 'package:dictionary/services/register.dart';
+
 import 'package:dictionary/widget/dictionary/body/body.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -17,29 +18,36 @@ class Dictionary extends StatefulWidget {
 
 class _DictionaryState extends State<Dictionary> {
   var presponse = "";
-  // var didReceiveResponse = true;
-  responseReceived() {
-    setState(() {});
-  }
 
   var objmemberId;
   var objmemdetails;
   var details;
   var gtokendata = '';
-  var getorderid = DateTime.now().millisecondsSinceEpoch.toString();
+  var getorderid;
+  late int trId;
+  saveTran(url, dynamic para) async {
+//  var data = {
+//       'email': txtemail.text,
+//       'mobile': txtmobile.text,
+//       'password': txtpassword.text,
+//       'fullName': txtfullname.text,
+//       'deviceId': 1
+//     };
 
-  saveTransaction({orderNo, amount, memberId, apiUrl}) {
-    var data = {'OrderNo': orderNo, 'Amount': amount, 'MemberId': memberId};
-    SaveTransaction().postData(data, apiUrl);
+    var res = await CallApi().postData(para, url);
+    var body = json.decode(res.body);
+
+    trId = body['data']['transactionId'];
   }
 
   payment() async {
     setState(() {});
+    getorderid = DateTime.now().millisecondsSinceEpoch.toString();
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
-    objmemdetails = sharedPreferences.getString('MemberDetails');
+    // objmemdetails = sharedPreferences.getString('MemberDetails');
     objmemberId = sharedPreferences.getString('memberId');
-    details = jsonDecode(objmemdetails);
+    // details = jsonDecode(objmemdetails);
 
     String orderId = getorderid;
     String stage = "TEST";
@@ -61,7 +69,7 @@ class _DictionaryState extends State<Dictionary> {
       'Amount': '100',
       'MemberId': objmemberId
     };
-    http.Response res = await http.post(
+    http.Response tokenRes = await http.post(
         Uri.parse(
           'https://test.cashfree.com/api/v2/cftoken/order',
         ),
@@ -76,12 +84,12 @@ class _DictionaryState extends State<Dictionary> {
           'orderCurrency': 'INR'
         }));
     // #saveTransactionResponsive
-    var saveTransactionResponsive = await SaveTransaction()
-        .postData(dataTransaction, 'api/transaction/SaveTransaction');
+
+    saveTran('api/transaction/SaveTransaction', dataTransaction);
 
     //##########saveTransactionResponsive
-    if (res.statusCode == 200) {
-      Map<String, dynamic> map = json.decode(res.body);
+    if (tokenRes.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(tokenRes.body);
       //  String token = ["cftoken"].toString();
       Map<String, dynamic> inputs = {
         "orderId": orderId,
@@ -100,15 +108,15 @@ class _DictionaryState extends State<Dictionary> {
 
       CashfreePGSDK.doPayment(inputs)
           .then((value) => value?.forEach((key, value) {
-                // responseReceived();
                 debugPrint("$key : $value");
                 presponse += "\"$key\":\"$value\"\n";
 
-                saveTransaction(
-                    amount: '100',
-                    memberId: objmemberId,
-                    orderNo: getorderid,
-                    apiUrl: 'api/transaction/UpdateTransaction');
+                //  inspect('*********$trId');
+                var tdata = {'TransactionId': trId, 'Status': 'completed'};
+                if (value == "SUCCESS") {
+                  inspect("SHivraj");
+                  saveTran('api/transaction/UpdateTransaction', tdata);
+                }
               }));
     }
   }
